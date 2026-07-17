@@ -61,3 +61,6 @@ CREATE TABLE IF NOT EXISTS BloodDonations (
     units_donated INT DEFAULT 1,
     FOREIGN KEY (donor_id) REFERENCES Donors(donor_id) ON DELETE CASCADE
 );
+
+-- Insert admin user if not exists
+INSERT OR IGNORE INTO Users (username, password, role) VALUES ('khushigoyal1808@gmail.com', 'admin123', 'admin');
