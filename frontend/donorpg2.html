@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Donation</title>
+  <link rel="stylesheet" href="donorpg2.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Donor</h2>
+    <a href="donorpg1.html">Dashboard</a>
+    <a href="donorpg2.html" class="active">Add Donation</a>
+    <a href="donorpg3.html">Donation History</a>
+    <a href="logout.html">Logout</a>
+  </div>
+
+  <div class="main">
+    <div class="center-wrapper">
+      <div class="card">
+        <h2>Add Donation</h2>
+        <form class="donation-form" onsubmit="submitDonation(event)">
+          <label for="date">Date of Donation:</label>
+          <input type="date" id="date" name="date" required>
+
+          <label for="units">Units Donated:</label>
+          <input type="number" id="units" name="units" min="1" required>
+
+          <label for="hemoglobin">Current Hemoglobin Level (g/dL):</label>
+          <input type="number" id="hemoglobin" name="hemoglobin" min="0" step="0.1" required>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  async function submitDonation(event) {
+    event.preventDefault();
+
+    const hemoglobin = parseFloat(document.getElementById("hemoglobin").value);
+    if (hemoglobin < 12.5) {
+      alert("Donation not allowed. Hemoglobin level must be at least 12.5 g/dL.");
+      return;
+    }
+
+    const donationDate = document.getElementById("date").value;
+    const units = parseInt(document.getElementById("units").value);
+    const userId = localStorage.getItem("user_id");  // ✅ FIXED
+
+    if (!userId) {
+      alert("Donor ID not found. Please login again.");
+      return;
+    }
+
+    const response = await fetch("http://127.0.0.1:5000/api/donor/donate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        donation_date: donationDate,
+        units_donated: units,
+        
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("Donation recorded successfully.");
+      document.querySelector(".donation-form").reset();
+    } else {
+      alert(result.message || "Failed to record donation.");
+    }
+  }
+</script>
+
+</body>
+</html>

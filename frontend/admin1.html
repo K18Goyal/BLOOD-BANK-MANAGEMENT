@@ -1,0 +1,45 @@
+<!-- admin1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donor Dashboard</title>
+  <link rel="stylesheet" href="admin1.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin1.html" class="active">Dashboard</a>
+    <a href="admin2.html">Manage Blood Request</a>
+    <a href="admin3.html">Blood Inventory</a>
+    <a href="admin4.html">View Users</a>
+    <a href="admin5.html">Donation History</a>
+    <a href="logout.html">Logout</a>
+  </div>
+
+  <div class="container">
+    <h2>Admin Dashboard</h2>
+    <div class="card-grid">
+      <div class="card">Total Donors: <span id="donors-count">--</span></div>
+      <div class="card">Units Available: <span id="units-count">--</span></div>
+      <div class="card">Pending Requests: <span id="pending-count">--</span></div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch dashboard stats
+    fetch('http://127.0.0.1:5000/api/admin/dashboard_stats')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('donors-count').textContent = data.total_donors;
+        document.getElementById('units-count').textContent = data.total_units;
+        document.getElementById('pending-count').textContent = data.pending_requests;
+      })
+      .catch(err => {
+        console.error('Error fetching dashboard stats:', err);
+      });
+  </script>
+</body>
+</html>

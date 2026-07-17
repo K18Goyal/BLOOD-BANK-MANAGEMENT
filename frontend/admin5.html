@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Donation History</title>
+  <link rel="stylesheet" href="admin5.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <h1>Admin</h1>
+    <ul>
+      <li><a href="admin1.html">Dashboard</a></li>
+      <li><a href="admin2.html">Manage Blood Request</a></li>
+      <li><a href="admin3.html">Blood Inventory</a></li>
+      <li><a href="admin4.html">View Users</a></li>
+      <li><a href="admin5.html" class="active">History</a></li>
+      <li><a href="logout.html">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <h2>View All Donation History</h2>
+    <p class="subtext">Full donation log with donor names, date, and units donated.</p>
+
+    <table class="donation-table">
+      <thead>
+        <tr>
+          <th>Donor Name</th>
+          <th>Blood Type</th>
+          <th>Date</th>
+          <th>Units Donated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadDonationHistory() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/admin/donation_history');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+
+        const tbody = document.querySelector('.donation-table tbody');
+        tbody.innerHTML = ''; // Clear existing rows
+
+        if (data.donations.length === 0) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td colspan="5" style="text-align:center;">No donation records found.</td>`;
+          tbody.appendChild(tr);
+          return;
+        }
+
+        data.donations.forEach(donation => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${donation.donor_name}</td>
+            <td>${donation.blood_group}</td>
+            <td>${donation.donation_date}</td>
+            <td>${donation.units_donated}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (error) {
+        console.error('Error loading donation history:', error);
+        const tbody = document.querySelector('.donation-table tbody');
+        tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;">Failed to load donation history.</td></tr>`;
+      }
+    }
+
+    window.onload = loadDonationHistory;
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donation History</title>
+  <link rel="stylesheet" href="donorpg3.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Donor</h2>
+    <a href="donorpg1.html">Dashboard</a>
+    <a href="donorpg2.html">Add Donation</a>
+    <a href="donorpg3.html" class="active">Donation History</a>
+    <a href="logout.html">Logout</a>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <h2>Donation History</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Units Donated</th>
+          </tr>
+        </thead>
+        <tbody id="history-body">
+          <!-- Donation rows will be inserted here dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const donorId = localStorage.getItem("donor_id"); // ✅ FIXED
+
+    if (!donorId) {
+      alert("Donor ID not found. Please login again.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/api/donor/donations/${donorId}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Failed to fetch donation history");
+        return;
+      }
+
+      const tbody = document.getElementById("history-body");
+      tbody.innerHTML = "";
+
+      if (data.donations.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='3'>No donation history available.</td></tr>";
+        return;
+      }
+
+      data.donations.forEach((donation, index) => {
+        const row = `<tr>
+                      <td>${index + 1}</td>
+                      <td>${donation.donation_date}</td>
+                      <td>${donation.units_donated}</td>
+                    </tr>`;
+        tbody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Error fetching donation history:", error);
+      alert("Something went wrong while fetching data.");
+    }
+  });
+</script>
+
+</body>
+</html>

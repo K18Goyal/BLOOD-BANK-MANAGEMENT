@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manage Blood Inventory</title>
+  <link rel="stylesheet" href="admin3.css"/>
+</head>
+<body>
+  <div class="sidebar">
+    <h1>Admin</h1>
+    <ul>
+      <li><a href="admin1.html">Dashboard</a></li>
+      <li><a href="admin2.html">Manage Blood Request</a></li>
+      <li><a href="admin3.html" class="active">Blood Inventory</a></li>
+      <li><a href="admin4.html">View Users</a></li>
+      <li><a href="admin5.html">Donation History</a></li>
+      <li><a href="logout.html">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <h2>Manage Blood Inventory</h2>
+    <p class="subtext">Update available units of each blood type manually.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Blood Type</th>
+          <th>Available Units</th>
+          <th>Update Units</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="inventory-body">
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadInventory() {
+      fetch('http://127.0.0.1:5000/api/admin/inventory')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('inventory-body');
+          tbody.innerHTML = '';
+          data.inventory.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${item.blood_group}</td>
+              <td>${item.units_available}</td>
+              <td><input type="number" value="${item.units_available}" min="0" id="input-${item.blood_group}"/></td>
+              <td><button class="btn-update" onclick="updateUnits('${item.blood_group}')">Update</button></td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => console.error('Error loading inventory:', err));
+    }
+
+    function updateUnits(bloodGroup) {
+      const newUnits = document.getElementById(`input-${bloodGroup}`).value;
+      fetch('http://127.0.0.1:5000/api/admin/update_inventory', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ blood_group: bloodGroup, units_available: parseInt(newUnits) })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        loadInventory();  // Refresh table
+      })
+      .catch(err => console.error('Error updating inventory:', err));
+    }
+
+    loadInventory();
+  </script>
+</body>
+</html>

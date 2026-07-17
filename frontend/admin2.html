@@ -1,0 +1,90 @@
+<!-- admin2.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View & Manage Blood Requests</title>
+  <link rel="stylesheet" href="admin2.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin</h2>
+    <a href="admin1.html">Dashboard</a>
+    <a href="admin2.html" class="active">Manage Blood Request</a>
+    <a href="admin3.html">Blood Inventory</a>
+    <a href="admin4.html">View Users</a>
+    <a href="admin5.html">Donation History</a>
+    <a href="logout.html">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h3>View & Manage Blood Requests</h3>
+    <p class="subtext">All pending requests. Use the buttons below to take action.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Full Name</th>
+          <th>Username</th>
+          <th>Blood Group</th>
+          <th>Units</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="requests-body">
+        <!-- Filled by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function loadRequests() {
+      fetch('http://127.0.0.1:5000/api/admin/requests')
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById('requests-body');
+          tbody.innerHTML = '';
+
+          data.requests.forEach(req => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${req.request_id}</td>
+              <td>${req.name}</td>
+              <td>${req.username}</td>
+              <td>${req.blood_group}</td>
+              <td>${req.units_needed}</td>
+              <td>${req.status}</td>
+              <td>${new Date(req.request_date).toLocaleDateString()}</td>
+              <td>
+                <button class="btn-approve" onclick="updateStatus(${req.request_id}, 'approved')">Approve</button>
+                <button class="btn-reject" onclick="updateStatus(${req.request_id}, 'rejected')">Reject</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => console.error('Error loading requests:', err));
+    }
+
+    function updateStatus(requestId, status) {
+      fetch('http://127.0.0.1:5000/api/admin/update_request_status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: requestId, status: status })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        loadRequests();  // Refresh table
+      })
+      .catch(err => console.error('Error updating status:', err));
+    }
+
+    // Initial load
+    loadRequests();
+  </script>
+</body>
+</html>

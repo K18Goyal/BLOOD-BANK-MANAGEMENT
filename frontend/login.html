@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Kind Heart Charity</title>
+  <link rel="stylesheet" href="login.css">
+  <script>
+    async function loginUser(event) {
+      event.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const role = document.getElementById("role").value;
+
+      if (!role) {
+        alert("Please select a role.");
+        return;
+      }
+
+      const response = await fetch('http://127.0.0.1:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+          role: role  // Optional: only if your backend expects this
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const user = result.user;
+
+        // Save basic user info
+        localStorage.setItem("user_id", user.user_id);
+        localStorage.setItem("role", user.role.toLowerCase());
+        localStorage.setItem("username", user.username);
+
+        const userRole = user.role.toLowerCase();
+
+        // Fetch donor_id or recipient_id if needed
+        if (userRole === "donor") {
+          const donorRes = await fetch(`http://127.0.0.1:5000/api/donor/get/${user.user_id}`);
+          const donorData = await donorRes.json();
+          if (donorRes.ok) {
+            localStorage.setItem("donor_id", donorData.donor_id);
+            window.location.href = "/frontend/donorpg1.html";
+          } else {
+            alert("Could not fetch donor details");
+          }
+        } else if (userRole === "recipient") {
+          const recRes = await fetch(`http://127.0.0.1:5000/api/recipient/get/${user.user_id}`);
+          const recData = await recRes.json();
+          if (recRes.ok) {
+            localStorage.setItem("recipient_id", recData.recipient_id);
+            window.location.href = "/frontend/recipientpg1.html";
+          } else {
+            alert("Could not fetch recipient details");
+          }
+        } else if (userRole === "admin") {
+          window.location.href = "/frontend/admin1.html";
+        } else {
+          alert("Unknown role: " + userRole);
+        }
+      } else {
+        alert(result.message || "Login failed");
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="logodbms.png" class="logo">
+        <h2>Welcome</h2>
+        <p>Please login to continue</p>
+      </div>
+      <form class="login-form" onsubmit="loginUser(event)">
+        <label for="email">Username</label>
+        <input type="text" id="email" placeholder="Enter username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+
+        <label for="role">Select Role</label>
+        <select id="role" required>
+          <option value="">-- Choose your role --</option>
+          <option value="admin">Admin</option>
+          <option value="donor">Donor</option>
+          <option value="recipient">Recipient</option>
+        </select>
+
+        <button type="submit">Login</button>
+
+        <div class="login-footer">
+          <p>Don't have an account? <a href="register.html">Register</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

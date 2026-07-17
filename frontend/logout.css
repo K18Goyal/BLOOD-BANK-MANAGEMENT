@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #e0f7fa, #ffffff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.logout-container {
+  text-align: center;
+}
+
+.logout-box {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: auto;
+}
+
+.icon {
+  font-size: 48px;
+  color: #17a2b8;
+  margin-bottom: 15px;
+}
+
+.logout-box h2 {
+  margin: 10px 0;
+  color: #333;
+}
+
+.logout-box p {
+  color: #555;
+  font-size: 14px;
+}
+
+.logout-box a {
+  color: #17a2b8;
+  text-decoration: none;
+}
+
+.logout-box a:hover {
+  text-decoration: underline;
+}

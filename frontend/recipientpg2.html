@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Blood</title>
+  <link rel="stylesheet" href="recipientpg2.css" />
+  <script>
+    async function submitBloodRequest(event) {
+      event.preventDefault();
+
+      const recipientId = localStorage.getItem("recipient_id");
+      const bloodGroup = document.getElementById("blood_group").value;
+      const unitsNeeded = document.getElementById("units").value;
+
+      if (!recipientId) {
+        alert("Recipient not logged in. Please login again.");
+        return;
+      }
+
+      const response = await fetch("http://127.0.0.1:5000/api/recipient/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          recipient_id: recipientId,
+          blood_group: bloodGroup,
+          units_needed: unitsNeeded
+        })
+      });
+
+      const result = await response.json();
+      alert(result.message || "Request submitted.");
+    }
+  </script>
+</head>
+<body>
+  <div class="form-container">
+    <h2 class="form-title">Request Blood</h2>
+    <p class="form-subtitle">Please fill out the form below to submit your blood request.</p>
+
+    <form class="request-form" onsubmit="submitBloodRequest(event)">
+      <label for="blood_group">Select Blood Type:</label>
+      <select id="blood_group" required>
+        <option value="">-- Select Blood Type --</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+      </select>
+
+      <label for="units">Units Needed:</label>
+      <input type="number" id="units" placeholder="Enter number of units" min="1" required />
+
+      <button type="submit">Submit Request</button>
+    </form>
+  </div>
+</body>
+</html>

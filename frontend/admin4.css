@@ -1,0 +1,88 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5faff;
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #223344;
+  color: white;
+  height: 100vh;
+  padding: 20px 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 12px 20px;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+.sidebar ul li:hover {
+  background-color: #2f455c;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+}
+h1{
+  color: #ffffff;
+  margin-bottom: 30px;
+  margin-left: 30px;
+}
+
+.main-content h2 {
+  font-size: 24px;
+  color: #223344;
+  margin-bottom: 8px;
+}
+
+.subtext {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.user-table thead {
+  background: #e9f4ff;
+}
+
+.btn {
+  padding: 6px 12px;
+  background-color: #1d75e5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #155cb0;
+}
