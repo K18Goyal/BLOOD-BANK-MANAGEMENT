@@ -1,13 +1,13 @@
 from flask import Flask
 from flask_cors import CORS
-from db_config import init_mysql
+from db_config import init_sqlite
 
 app = Flask(__name__)
 CORS(app)
 
-# Initialize MySQL
-mysql = init_mysql(app)
-app.config['MYSQL_OBJ'] = mysql
+# Initialize SQLite
+sqlite_db = init_sqlite(app)
+app.config['MYSQL_OBJ'] = sqlite_db
 
 # Import and register blueprints
 from routes.auth_routes import auth_bp
