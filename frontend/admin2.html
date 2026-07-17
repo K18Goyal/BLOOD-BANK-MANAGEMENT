@@ -42,7 +42,7 @@
 
   <script>
     function loadRequests() {
-      fetch('http://127.0.0.1:5000/api/admin/requests')
+      fetch('/api/admin/requests')
         .then(res => res.json())
         .then(data => {
           const tbody = document.getElementById('requests-body');
@@ -70,7 +70,7 @@
     }
 
     function updateStatus(requestId, status) {
-      fetch('http://127.0.0.1:5000/api/admin/update_request_status', {
+      fetch('/api/admin/update_request_status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ request_id: requestId, status: status })

@@ -40,7 +40,7 @@
 
   <script>
     function loadInventory() {
-      fetch('http://127.0.0.1:5000/api/admin/inventory')
+      fetch('/api/admin/inventory')
         .then(res => res.json())
         .then(data => {
           const tbody = document.getElementById('inventory-body');
@@ -61,7 +61,7 @@
 
     function updateUnits(bloodGroup) {
       const newUnits = document.getElementById(`input-${bloodGroup}`).value;
-      fetch('http://127.0.0.1:5000/api/admin/update_inventory', {
+      fetch('/api/admin/update_inventory', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ blood_group: bloodGroup, units_available: parseInt(newUnits) })

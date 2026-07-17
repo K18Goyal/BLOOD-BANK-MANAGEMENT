@@ -40,7 +40,7 @@
   <script>
     async function loadDonationHistory() {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/admin/donation_history');
+        const response = await fetch('/api/admin/donation_history');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
 

@@ -30,7 +30,7 @@
 
   <script>
     // Fetch dashboard stats
-    fetch('http://127.0.0.1:5000/api/admin/dashboard_stats')
+    fetch('/api/admin/dashboard_stats')
       .then(res => res.json())
       .then(data => {
         document.getElementById('donors-count').textContent = data.total_donors;

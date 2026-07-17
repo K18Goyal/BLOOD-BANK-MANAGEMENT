@@ -122,7 +122,7 @@
 
       try {
         // Step 1: Register user in Users table
-        const userRes = await fetch("http://127.0.0.1:5000/api/register_user", {
+        const userRes = await fetch("/api/register_user", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password, role })
@@ -140,11 +140,11 @@
         let body = { user_id: userId, name, age, contact };
 
         if (role === "donor") {
-          endpoint = "http://127.0.0.1:5000/api/donor/register";
+          endpoint = "/api/donor/register";
           body.blood_group = blood_group;
           body.last_donation = null; // or add field if you want
         } else if (role === "recipient") {
-          endpoint = "http://127.0.0.1:5000/api/recipient/register";
+          endpoint = "/api/recipient/register";
           body.blood_group = blood_group || "O+"; // fallback if needed
           // You can also add hospital and units required here if needed
         }

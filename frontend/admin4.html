@@ -40,7 +40,7 @@
 
   <script>
     function loadUsers() {
-      fetch('http://127.0.0.1:5000/api/admin/all_users')
+      fetch('/api/admin/all_users')
         .then(res => res.json())
         .then(data => {
           const tbody = document.getElementById('user-table-body');
