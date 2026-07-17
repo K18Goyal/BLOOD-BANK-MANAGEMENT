@@ -11,7 +11,7 @@ def register_recipient():
 
     query = """
         INSERT INTO Recipients (user_id, name, age, blood_group, contact)
-        VALUES (%s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?)
     """
     cursor.execute(query, (
         data['user_id'],
@@ -32,7 +32,7 @@ def request_blood():
 
     query = """
         INSERT INTO Requests (recipient_id, blood_group, units_needed, request_date)
-        VALUES (%s, %s, %s, %s)
+        VALUES (?, ?, ?, ?)
     """
     cursor.execute(query, (
         data['recipient_id'],

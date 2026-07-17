@@ -64,8 +64,8 @@ def update_request_status():
     if new_status.lower() == 'approved':
         cursor.execute("""
             UPDATE BloodInventory
-            SET units_available = units_available - %s
-            WHERE blood_group = %s AND units_available >= %s
+            SET units_available = units_available - ?
+            WHERE blood_group = ? AND units_available >= ?
         """, (units_needed, blood_group, units_needed))
         if cursor.rowcount == 0:
             return jsonify({'message': 'Not enough blood units available'}), 400
@@ -140,7 +140,7 @@ def update_inventory():
 
         cursor.execute("""
             INSERT INTO BloodInventory (blood_group, units_available)
-            VALUES (%s, %s)
+            VALUES (?, ?)
             ON DUPLICATE KEY UPDATE units_available = VALUES(units_available)
         """, (blood_group, units))
 

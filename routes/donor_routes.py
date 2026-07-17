@@ -8,14 +8,12 @@ donor_bp = Blueprint('donor', __name__)
 def register_donor():
     data = request.get_json()
     conn = current_app.config['MYSQL_OBJ']
-    if not conn.is_connected():
-        conn.reconnect()
 
     cursor = conn.cursor()
 
     query = """
         INSERT INTO Donors (user_id, name, age, blood_group, contact, last_donation)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES (?, ?, ?, ?, ?, ?)
     """
     cursor.execute(query, (
         data['user_id'],
@@ -35,8 +33,6 @@ def register_donor():
 def donate_blood():
     data = request.get_json()
     conn = current_app.config['MYSQL_OBJ']
-    if not conn.is_connected():
-        conn.reconnect()
 
     # cursor = conn.cursor()
     cursor = conn.cursor()
@@ -59,15 +55,15 @@ def donate_blood():
     # ✅ Step 2: Insert donation record
     insert_query = """
         INSERT INTO BloodDonations (donor_id, donation_date, units_donated)
-        VALUES (%s, %s, %s)
+        VALUES (?, ?, ?)
     """
     cursor.execute(insert_query, (donor_id, donation_date, units))
 
     # ✅ Step 3: Update BloodInventory
     update_query = """
         UPDATE BloodInventory
-        SET units_available = units_available + %s
-        WHERE blood_group = %s
+        SET units_available = units_available + ?
+        WHERE blood_group = ?
     """
     cursor.execute(update_query, (units, blood_group))
 
@@ -86,8 +82,6 @@ def donate_blood():
 def get_donation_history(donor_id):
     try:
         conn = current_app.config['MYSQL_OBJ']
-        if not conn.is_connected():
-            conn.reconnect()
 
         # cursor = conn.cursor()
         cur = conn.cursor()
@@ -109,8 +103,6 @@ def get_donation_history(donor_id):
 @donor_bp.route('/get/<int:user_id>', methods=['GET'])
 def get_donor_by_user_id(user_id):
     conn = current_app.config['MYSQL_OBJ']
-    if not conn.is_connected():
-        conn.reconnect()
 
     # cursor = conn.cursor()
     cursor = conn.cursor()
