@@ -1,10 +1,19 @@
 import os
+import sqlite3
 from flask import Flask, send_from_directory
 from flask_cors import CORS
+from flask.json.provider import DefaultJSONProvider
 from db_config import init_sqlite
+
+class CustomJSONProvider(DefaultJSONProvider):
+    def default(self, obj):
+        if isinstance(obj, sqlite3.Row):
+            return dict(obj)
+        return super().default(obj)
 
 # Serve static files from 'frontend' folder
 app = Flask(__name__, static_folder='frontend', static_url_path='/')
+app.json = CustomJSONProvider(app)
 CORS(app)
 
 # Initialize SQLite
