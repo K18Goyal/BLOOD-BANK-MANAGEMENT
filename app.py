@@ -11,8 +11,11 @@ class CustomJSONProvider(DefaultJSONProvider):
             return dict(obj)
         return super().default(obj)
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
+
 # Serve static files from 'frontend' folder
-app = Flask(__name__, static_folder='frontend', static_url_path='/')
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='/')
 app.json = CustomJSONProvider(app)
 CORS(app)
 
